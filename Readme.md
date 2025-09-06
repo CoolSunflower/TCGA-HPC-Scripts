@@ -8,7 +8,7 @@ abcd:
     |
     |-- {RootFolder} (Change Variable Below)
         |-- main.py and other code files
-        |-- all .sh files
+        |-- all generated .sh files from tasks/scripts
         |-- Folder: o_e_files/
         |-- Folder: Results/
 
