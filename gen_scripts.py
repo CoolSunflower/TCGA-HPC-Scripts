@@ -2,23 +2,6 @@ import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
 
-"""
-DIRECTORY STRUCTURE FOR EXECUTION on hpc:
-
-Assume the following directory structure:
-Folder on HPC Server with your username: abcd
-abcd:
-    |
-    |-- {RootFolder} (Change Variable Below)
-        |-- main.py and other code files
-        |-- all .sh files
-        |-- Folder: o_e_files/
-        |-- Folder: Results/
-
-
-For execution, execute the commands in script.txt from the main (abcd) folder.
-"""
-
 # Need to change this to the name of the root folder 
 RootFolder = "multiomics"
 FeatureCount = 100
