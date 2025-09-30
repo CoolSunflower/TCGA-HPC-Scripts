@@ -5,7 +5,7 @@ from tqdm import tqdm
 # Need to change this to the name of the root folder 
 RootFolder = "multiomics"
 FeatureCount = 100
-FeatureMethod = 2
+# FeatureMethod = 2
 EnvironmentName = "myenv"
 
 script_format = '''#!/bin/bash
@@ -58,32 +58,34 @@ def process_two_feature_file(file_path, scripts_dir, sbatch_commands):
         
         data_category = 'Race'
         ddp_group = target_group
-        feature_method_name = f'Method{FeatureMethod}'
-        
-        task_name = generate_task_name(
-            data_category, cancer_type, ddp_group, feature_string, 
-            endpoint, years, feature_method_name, FeatureCount
-        )
-        
-        script_content = script_format.format(
-            job=task_name,
-            RootFolder=RootFolder,
-            DDP_GROUP=ddp_group,
-            CANCER_TYPE=cancer_type,
-            ENDPOINT=endpoint,
-            TIME=years,
-            FEATURE_COUNT=FeatureCount,
-            FEATURE_METHOD=FeatureMethod,
-            FEATURE_STRING=feature_string,
-            ENVIRONMENT_NAME=EnvironmentName
-        )
-        
-        script_file = scripts_dir / f"{task_name}.sh"
-        with open(script_file, 'w') as f:
-            f.write(script_content)
-        
-        # Add sbatch command
-        sbatch_commands.append(f"sbatch {RootFolder}/{task_name}.sh")
+
+        for FeatureMethod in [0,1,2,3]:
+            feature_method_name = f'Method{FeatureMethod}'
+            
+            task_name = generate_task_name(
+                data_category, cancer_type, ddp_group, feature_string, 
+                endpoint, years, feature_method_name, FeatureCount
+            )
+            
+            script_content = script_format.format(
+                job=task_name,
+                RootFolder=RootFolder,
+                DDP_GROUP=ddp_group,
+                CANCER_TYPE=cancer_type,
+                ENDPOINT=endpoint,
+                TIME=years,
+                FEATURE_COUNT=FeatureCount,
+                FEATURE_METHOD=FeatureMethod,
+                FEATURE_STRING=feature_string,
+                ENVIRONMENT_NAME=EnvironmentName
+            )
+            
+            script_file = scripts_dir / f"{task_name}.sh"
+            with open(script_file, 'w') as f:
+                f.write(script_content)
+            
+            # Add sbatch command
+            sbatch_commands.append(f"sbatch {RootFolder}/{task_name}.sh")
         
 def process_multi_feature_file(file_path, scripts_dir, sbatch_commands):
     print(f"Processing multi-feature file: {file_path}")
@@ -109,31 +111,33 @@ def process_multi_feature_file(file_path, scripts_dir, sbatch_commands):
             
             data_category = 'Race'
             ddp_group = sheet_name
-            feature_method_name = f'Method{FeatureMethod}'
-            
-            task_name = generate_task_name(
-                data_category, cancer_type, ddp_group, feature_string, 
-                endpoint, years, feature_method_name, FeatureCount
-            )
-            
-            script_content = script_format.format(
-                job=task_name,
-                RootFolder=RootFolder,
-                DDP_GROUP=ddp_group,
-                CANCER_TYPE=cancer_type,
-                ENDPOINT=endpoint,
-                TIME=years,
-                FEATURE_COUNT=FeatureCount,
-                FEATURE_METHOD=FeatureMethod,
-                FEATURE_STRING=feature_string,
-                ENVIRONMENT_NAME=EnvironmentName
-            )
-            
-            script_file = scripts_dir / f"{task_name}.sh"
-            with open(script_file, 'w') as f:
-                f.write(script_content)
-            
-            sbatch_commands.append(f"sbatch {RootFolder}/{task_name}.sh")
+
+            for FeatureMethod in [0,1,2,3]:
+                feature_method_name = f'Method{FeatureMethod}'
+                
+                task_name = generate_task_name(
+                    data_category, cancer_type, ddp_group, feature_string, 
+                    endpoint, years, feature_method_name, FeatureCount
+                )
+                
+                script_content = script_format.format(
+                    job=task_name,
+                    RootFolder=RootFolder,
+                    DDP_GROUP=ddp_group,
+                    CANCER_TYPE=cancer_type,
+                    ENDPOINT=endpoint,
+                    TIME=years,
+                    FEATURE_COUNT=FeatureCount,
+                    FEATURE_METHOD=FeatureMethod,
+                    FEATURE_STRING=feature_string,
+                    ENVIRONMENT_NAME=EnvironmentName
+                )
+                
+                script_file = scripts_dir / f"{task_name}.sh"
+                with open(script_file, 'w') as f:
+                    f.write(script_content)
+                
+                sbatch_commands.append(f"sbatch {RootFolder}/{task_name}.sh")
 
 def main():
     tasks_dir = Path("tasks")
